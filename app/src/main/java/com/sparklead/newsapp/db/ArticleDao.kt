@@ -2,7 +2,7 @@ package com.sparklead.newsapp.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.sparklead.newsapp.Article
+import com.sparklead.newsapp.models.Article
 
 @Dao
 interface ArticleDao {
