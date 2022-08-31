@@ -1,11 +1,11 @@
 package com.sparklead.newsapp.ui
 
-import androidx.lifecycle.ViewModel
+import com.sparklead.newsapp.api.RetrofitInstance
 import com.sparklead.newsapp.db.ArticleDatabase
 
 class NewsRepository(
     val db : ArticleDatabase
-): ViewModel() {
-
-
+){
+    suspend fun getBreakingNews(countryCode : String, pageNumber: Int ) =
+        RetrofitInstance.api.getBreakingNews(countryCode,pageNumber)
 }
