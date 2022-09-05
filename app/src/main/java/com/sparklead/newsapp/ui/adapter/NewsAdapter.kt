@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.sparklead.newsapp.R
 import com.sparklead.newsapp.models.Article
 import kotlinx.android.synthetic.main.item_article_preview.view.*
 
@@ -30,12 +31,18 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
         return ArticleViewHolder(
             LayoutInflater.from(parent.context).inflate(
-                com.sparklead.newsapp.R.layout.item_article_preview,
+                R.layout.item_article_preview,
                 parent,
                 false
             )
         )
     }
+
+    override fun getItemCount(): Int {
+        return differ.currentList.size
+    }
+
+    private var onItemClickListener : ((Article) -> Unit)? = null
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val article = differ.currentList[position]
@@ -47,20 +54,13 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
             tvDescription.text = article.description
             tvPublishedAt.text = article.publishedAt
 
-            setOnItemClickListener {
+            setOnClickListener {
                 onItemClickListener?.let { it(article) }
             }
         }
     }
 
-    private var onItemClickListener : ((Article) -> Unit)? = null
-
     fun setOnItemClickListener(listener:(Article) -> Unit){
         onItemClickListener = listener
     }
-
-    override fun getItemCount(): Int {
-        return differ.currentList.size
-    }
-
 }

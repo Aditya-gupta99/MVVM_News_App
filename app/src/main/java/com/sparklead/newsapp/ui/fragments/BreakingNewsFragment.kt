@@ -3,9 +3,12 @@ package com.sparklead.newsapp.ui.fragments
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.ActivityNavigatorExtras
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sparklead.newsapp.R
 import com.sparklead.newsapp.models.NewsResponse
@@ -25,7 +28,28 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = (activity as NewsActivity).viewModel
+
         setupRecycleView()
+
+        newsAdapter.setOnItemClickListener{
+
+
+            try{
+                val bundle = Bundle().apply {
+                    putParcelable("article", it)
+                }
+                findNavController().navigate(
+                    R.id.action_breakingNewsFragment_to_articleFragment,
+                    bundle
+                )
+
+            }
+            catch(e: Exception){
+                Toast.makeText(context, "Article is empty!", Toast.LENGTH_SHORT).show()
+                Log.e("EXCEPTION" , e.toString())
+            }
+        }
+
 
         viewModel.breakingNews.observe(viewLifecycleOwner,Observer{ response ->
             when(response){
@@ -48,22 +72,20 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         })
     }
 
-    fun hideProgressBar(){
+    private fun hideProgressBar(){
         paginationProgressBar.visibility = View.INVISIBLE
     }
 
-    fun showProgressBar(){
+    private fun showProgressBar(){
         paginationProgressBar.visibility = View.VISIBLE
     }
 
     private fun setupRecycleView(){
         newsAdapter = NewsAdapter()
-
         rvBreakingNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
         }
     }
-
 
 }
